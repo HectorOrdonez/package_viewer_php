@@ -11,6 +11,13 @@
 |
 */
 
+use App\Http\Controllers\StatusController;
+
 $app->get('/', function () use ($app) {
     return $app->version();
+});
+
+
+$app->group(['prefix' => 'api'], function () use ($app) {
+    $app->get('status', StatusController::class . '@index');
 });
