@@ -20,5 +20,5 @@ $app->get('/', function () use ($app) {
 
 $app->group(['prefix' => 'api'], function () use ($app) {
     $app->get('status', StatusController::class . '@index');
-    $app->get('status/show', StatusController::class . '@show');
+    $app->get('status/show/{package}', StatusController::class . '@show');
 });

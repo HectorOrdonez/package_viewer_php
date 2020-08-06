@@ -12,12 +12,10 @@ class StatusController extends Controller
 
         $file = file(base_path() . '/tests/Support/status-1-entry');
 
-        foreach($file as $line)
-        {
+        foreach ($file as $line) {
             $exploded = explode(': ', $line);
 
-            if($exploded[0] == 'Package')
-            {
+            if ($exploded[0] == 'Package') {
                 $data[] = trim($exploded[1]);
             }
         }
@@ -26,8 +24,6 @@ class StatusController extends Controller
 
     public function show($package = '')
     {
-        return response()->json(['Please specify which package to show'], 400);
-
-//        return response()->json(['Could not find requested package', 400]);
+        return response()->json(['Could not find requested package'], 400);
     }
 }

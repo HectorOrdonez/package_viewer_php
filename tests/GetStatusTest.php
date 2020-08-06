@@ -22,8 +22,10 @@ class GetStatusTest extends TestCase
     }
 
     /** @test */
-    public function show_responds_with_error_when_no_package_is_requested() {
-        $this->get('api/status/show')->assertResponseStatus(400);
+    public function show_responds_with_error_when_package_does_not_exist() {
+        $packageThatDoesNotExist = 'life-universe-and-everything';
+
+        $this->get('api/status/show/' . $packageThatDoesNotExist)->assertResponseStatus(400);
     }
 
 }
