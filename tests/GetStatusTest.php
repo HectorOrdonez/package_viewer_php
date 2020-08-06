@@ -12,4 +12,13 @@ class GetStatusTest extends TestCase
         $this->get('api/status')
             ->assertResponseOk();
     }
+
+    /** @test */
+    public function it_responds_with_debconf_in_contents_when_status_only_has_that_entry()
+    {
+        $response = $this->get('api/status')->shouldReturnJson([
+            'debconf',
+        ]);
+    }
+
 }
