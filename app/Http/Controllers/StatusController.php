@@ -10,7 +10,7 @@ class StatusController extends Controller
     {
         $data = [];
 
-        $file = file(base_path() . '/tests/Support/status-all-entries');
+        $file = file(base_path() . '/tests/Support/status-1-entry');
 
         foreach($file as $line)
         {
@@ -22,5 +22,12 @@ class StatusController extends Controller
             }
         }
         return response()->json([$data]);
+    }
+
+    public function show($package = '')
+    {
+        return response()->json(['Please specify which package to show'], 400);
+
+//        return response()->json(['Could not find requested package', 400]);
     }
 }
