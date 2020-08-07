@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\File;
 
-class StatusController extends Controller
+class PackageController extends Controller
 {
     public function index()
     {

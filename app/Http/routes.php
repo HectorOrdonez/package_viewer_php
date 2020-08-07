@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\StatusController;
+use App\Http\Controllers\PackageController;
 
 $app->get('/', function () use ($app) {
     return $app->version();
@@ -19,6 +19,6 @@ $app->get('/', function () use ($app) {
 
 
 $app->group(['prefix' => 'api'], function () use ($app) {
-    $app->get('status', StatusController::class . '@index');
-    $app->get('status/show/{package}', StatusController::class . '@show');
+    $app->get('packages', PackageController::class . '@index');
+    $app->get('packages/show/{package}', PackageController::class . '@show');
 });

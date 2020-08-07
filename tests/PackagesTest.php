@@ -2,21 +2,21 @@
 
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-class GetStatusTest extends TestCase
+class PackagesTest extends TestCase
 {
     /**
      * @test
      */
     public function index_responds_with_200()
     {
-        $this->get('api/status')
+        $this->get('api/packages')
             ->assertResponseOk();
     }
 
     /** @test */
     public function index_responds_with_debconf_when_only_that_entry_exists()
     {
-        $response = $this->get('api/status')->shouldReturnJson([
+        $response = $this->get('api/packages')->shouldReturnJson([
             'debconf',
         ]);
     }
@@ -26,7 +26,7 @@ class GetStatusTest extends TestCase
     {
         $packageThatDoesNotExist = 'life-universe-and-everything';
 
-        $this->get('api/status/show/' . $packageThatDoesNotExist)->assertResponseStatus(400);
+        $this->get('api/packages/show/' . $packageThatDoesNotExist)->assertResponseStatus(400);
     }
 
     /** @test */
@@ -34,7 +34,7 @@ class GetStatusTest extends TestCase
     {
         $packageThatExists = 'debconf';
 
-        $response = $this->get('api/status/show/' . $packageThatExists);
+        $response = $this->get('api/packages/show/' . $packageThatExists);
 
         $response->assertResponseStatus(200);
         $response->shouldReturnJson([
