@@ -3,6 +3,7 @@
 namespace AgriPlace\Package;
 
 use AgriPlace\Package\Entity\Package;
+use AgriPlace\Package\Exception\PackageNotFoundException;
 
 interface PackageRepositoryInterface
 {
@@ -16,6 +17,7 @@ interface PackageRepositoryInterface
      * Returns a package by its name
      * @param string $name
      * @return Package
+     * @throws PackageNotFoundException
      */
     public function findOneByName($name);
 }
