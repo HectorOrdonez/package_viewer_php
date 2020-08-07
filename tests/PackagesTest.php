@@ -1,9 +1,22 @@
 <?php
 
+use AgriPlace\Package\PackageRepositoryInterface;
+use AgriPlace\Package\Repository\FilePackageRepository;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class PackagesTest extends TestCase
 {
+    private $sourceFile;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app->bind(PackageRepositoryInterface::class, function () {
+            return new FilePackageRepository('/tests/Support/status-1-entry');
+        });
+    }
+
     /**
      * @test
      */
@@ -54,6 +67,18 @@ class PackagesTest extends TestCase
         $response->shouldReturnJson([
             'name' => 'debconf',
             'description' => 'Debian configuration management system',
-        ]); 
+        ]);
     }
+
+    /** @test */
+    public function show_responds_with_dependency_without_reference_when_package_has_dependency_not_in_package_file()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+
+    }
+
 }

@@ -1,0 +1,65 @@
+Package: libdrm-radeon1
+Status: install ok installed
+Multi-Arch: same
+Priority: required
+Section: libs
+Installed-Size: 103
+Maintainer: Ubuntu X-SWAT <ubuntu-x@lists.ubuntu.com>
+Architecture: amd64
+Source: libdrm
+Version: 2.4.32-1ubuntu1
+Depends: libc6 (>= 2.14), libdrm2 (>= 2.4.3)
+Pre-Depends: multiarch-support
+Description: Userspace interface to radeon-specific kernel DRM services -- runtime
+ This library implements the userspace interface to the radeon-specific kernel
+ DRM services.  DRM stands for "Direct Rendering Manager", which is the
+ kernelspace portion of the "Direct Rendering Infrastructure" (DRI). The DRI is
+ currently used on Linux to provide hardware-accelerated OpenGL drivers.
+Original-Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
+
+Package: libdrm2
+Status: install ok installed
+Multi-Arch: same
+Priority: required
+Section: libs
+Installed-Size: 105
+Maintainer: Ubuntu X-SWAT <ubuntu-x@lists.ubuntu.com>
+Architecture: amd64
+Source: libdrm
+Version: 2.4.32-1ubuntu1
+Depends: libc6 (>= 2.14)
+Pre-Depends: multiarch-support
+Description: Userspace interface to kernel DRM services -- runtime
+ This library implements the userspace interface to the kernel DRM
+ services.  DRM stands for "Direct Rendering Manager", which is the
+ kernelspace portion of the "Direct Rendering Infrastructure" (DRI).
+ The DRI is currently used on Linux to provide hardware-accelerated
+ OpenGL drivers.
+ .
+ This package provides the runtime environment for libdrm.
+Original-Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
+
+Package: libc6
+Status: install ok installed
+Multi-Arch: same
+Priority: required
+Section: libs
+Installed-Size: 10412
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Architecture: amd64
+Source: eglibc
+Version: 2.15-0ubuntu10.3
+Replaces: belocs-locales-bin, libc6-amd64
+Provides: glibc-2.13-1
+Depends: libc-bin (= 2.15-0ubuntu10.3), libgcc1, tzdata
+Suggests: glibc-doc, debconf | debconf-2.0, locales
+Breaks: nscd (<< 2.15)
+Conflicts: belocs-locales-bin, libc6-amd64, prelink (<< 0.0.20090925), tzdata (<< 2007k-1), tzdata-etch
+Conffiles:
+ /etc/ld.so.conf.d/x86_64-linux-gnu.conf 593ad12389ab2b6f952e7ede67b8fbbf
+Description: Embedded GNU C Library: Shared libraries
+ Contains the standard libraries that are used by nearly all programs on
+ the system. This package includes shared versions of the standard C library
+ and the standard math library, as well as many others.
+Homepage: http://www.eglibc.org
+Original-Maintainer: GNU Libc Maintainers <debian-glibc@lists.debian.org>

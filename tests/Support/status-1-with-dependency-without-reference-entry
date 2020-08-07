@@ -1,0 +1,18 @@
+Package: libdrm-radeon1
+Status: install ok installed
+Multi-Arch: same
+Priority: required
+Section: libs
+Installed-Size: 103
+Maintainer: Ubuntu X-SWAT <ubuntu-x@lists.ubuntu.com>
+Architecture: amd64
+Source: libdrm
+Version: 2.4.32-1ubuntu1
+Depends: libc6 (>= 2.14), libdrm2 (>= 2.4.3)
+Pre-Depends: multiarch-support
+Description: Userspace interface to radeon-specific kernel DRM services -- runtime
+ This library implements the userspace interface to the radeon-specific kernel
+ DRM services.  DRM stands for "Direct Rendering Manager", which is the
+ kernelspace portion of the "Direct Rendering Infrastructure" (DRI). The DRI is
+ currently used on Linux to provide hardware-accelerated OpenGL drivers.
+Original-Maintainer: Debian X Strike Force <debian-x@lists.debian.org>

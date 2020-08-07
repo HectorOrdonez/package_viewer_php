@@ -8,6 +8,19 @@ use AgriPlace\Package\PackageRepositoryInterface;
 
 class FilePackageRepository implements PackageRepositoryInterface
 {
+    private $sourceFile;
+
+    /**
+     * Source file path is expected to be relative to the base path of the application
+     * For instance: /tests/Support/status-1-entry
+     *
+     * @param string $sourceFilePath
+     */
+    public function __construct($sourceFilePath)
+    {
+        $this->sourceFile = file(base_path() . $sourceFilePath);
+    }
+
     /**
      * @inheritDoc
      */
@@ -15,9 +28,7 @@ class FilePackageRepository implements PackageRepositoryInterface
     {
         $data = [];
 
-        $file = file(base_path() . '/tests/Support/status-1-entry');
-
-        foreach ($file as $line) {
+        foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 
             if ($exploded[0] == 'Package') {
@@ -33,8 +44,7 @@ class FilePackageRepository implements PackageRepositoryInterface
      */
     public function findOneByName($name)
     {
-        if($this->packageExists($name) == false)
-        {
+        if ($this->packageExists($name) == false) {
             throw new PackageNotFoundException('That package does not exist');
         }
 
@@ -45,16 +55,13 @@ class FilePackageRepository implements PackageRepositoryInterface
 
     private function packageExists($requestedPackage)
     {
-        $file = file(base_path() . '/tests/Support/status-1-entry');
-
-        foreach ($file as $line) {
+        foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 
             if ($exploded[0] == 'Package') {
                 $packageName = trim($exploded[1]);
 
-                if($packageName == $requestedPackage)
-                {
+                if ($packageName == $requestedPackage) {
                     return true;
                 }
             }
@@ -66,33 +73,29 @@ class FilePackageRepository implements PackageRepositoryInterface
     /**
      * This function assumes the package exists
      *
-     * @param $package
+     * @param string $requestedPackage
      * @return array
      */
     private function getPackageDetails($requestedPackage)
     {
-        $file = file(base_path() . '/tests/Support/status-1-entry');
         $fileFound = false;
         $data = [];
 
         // First we need to find where the package info starts
-        foreach ($file as $line) {
+        foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 
-            if($fileFound == true)
-            {
+            if ($fileFound == true) {
                 // If we found the file we need to make sure to stop reading
                 // when data is finished
-                if($line == "\n\n")
-                {
+                if ($line == "\n\n") {
                     return $data;
                 }
 
                 $exploded = explode(': ', $line);
 
                 // We do not need information related to multiple lines
-                if(count($exploded) == 1)
-                {
+                if (count($exploded) == 1) {
                     continue;
                 }
 
@@ -102,8 +105,7 @@ class FilePackageRepository implements PackageRepositoryInterface
             if ($exploded[0] == 'Package') {
                 $packageName = trim($exploded[1]);
 
-                if($packageName == $requestedPackage)
-                {
+                if ($packageName == $requestedPackage) {
                     // This is the package we are looking for!
                     $fileFound = true;
                     $data['Package'] = $packageName;
