@@ -9,18 +9,9 @@ class PackageController extends Controller
 {
     public function index(PackageRepositoryInterface $packageRepository)
     {
-        $data = [];
+        $names = $packageRepository->findAllNames();
 
-        $file = file(base_path() . '/tests/Support/status-1-entry');
-
-        foreach ($file as $line) {
-            $exploded = explode(': ', $line);
-
-            if ($exploded[0] == 'Package') {
-                $data[] = trim($exploded[1]);
-            }
-        }
-        return response()->json([$data]);
+        return response()->json($names);
     }
 
     public function show(PackageRepositoryInterface $packageRepository, $package)

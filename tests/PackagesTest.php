@@ -9,33 +9,47 @@ class PackagesTest extends TestCase
      */
     public function index_responds_with_200()
     {
-        $this->get('api/packages')
-            ->assertResponseOk();
+        // Act
+        $response = $this->get('api/packages');
+
+        // Assert
+        $response->assertResponseOk();
     }
 
     /** @test */
     public function index_responds_with_debconf_when_only_that_entry_exists()
     {
-        $response = $this->get('api/packages')->shouldReturnJson([
-            'debconf',
-        ]);
+        // Act
+        $response = $this->get('api/packages');
+
+        // Assert
+        $response->assertResponseOk();
+        $response->shouldReturnJson(['debconf']);
     }
 
     /** @test */
     public function show_responds_with_error_when_package_does_not_exist()
     {
+        // Arrange
         $packageThatDoesNotExist = 'life-universe-and-everything';
 
-        $this->get('api/packages/show/' . $packageThatDoesNotExist)->assertResponseStatus(400);
+        // Act
+        $response = $this->get('api/packages/show/' . $packageThatDoesNotExist);
+
+        // Assert
+        $response->assertResponseStatus(400);
     }
 
     /** @test */
     public function show_responds_with_package_contents_when_package_exists()
     {
+        // Arrange
         $packageThatExists = 'debconf';
 
+        // Act
         $response = $this->get('api/packages/show/' . $packageThatExists);
 
+        // Assert
         $response->assertResponseStatus(200);
         $response->shouldReturnJson([
             'Package' => 'debconf',
