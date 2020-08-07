@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use AgriPlace\Package\PackageRepositoryInterface;
 use Illuminate\Support\Facades\File;
 
 class PackageController extends Controller
 {
-    public function index()
+    public function index(PackageRepositoryInterface $packageRepository)
     {
         $data = [];
 
@@ -22,7 +23,7 @@ class PackageController extends Controller
         return response()->json([$data]);
     }
 
-    public function show($package)
+    public function show(PackageRepositoryInterface $packageRepository, $package)
     {
         if ($this->packageExists($package) == false) {
             return response()->json(['Could not find requested package'], 400);
