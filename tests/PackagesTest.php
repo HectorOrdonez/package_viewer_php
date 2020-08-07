@@ -12,8 +12,13 @@ class PackagesTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->bind(PackageRepositoryInterface::class, function () {
-            return new FilePackageRepository('/tests/Support/status-1-entry');
+        $this->useFakeSourceFile('/tests/Support/status-1-entry');
+    }
+
+    private function useFakeSourceFile($fakeSourceFile)
+    {
+        $this->app->bind(PackageRepositoryInterface::class, function () use ($fakeSourceFile) {
+            return new FilePackageRepository($fakeSourceFile);
         });
     }
 
@@ -57,6 +62,7 @@ class PackagesTest extends TestCase
     public function show_responds_with_package_contents_when_package_exists()
     {
         // Arrange
+        $this->useFakeSourceFile('/tests/Support/status-all-entries');
         $packageThatExists = 'debconf';
 
         // Act

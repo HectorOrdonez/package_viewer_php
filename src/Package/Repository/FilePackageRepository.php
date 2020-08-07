@@ -44,6 +44,7 @@ class FilePackageRepository implements PackageRepositoryInterface
      */
     public function findOneByName($name)
     {
+
         if ($this->packageExists($name) == false) {
             throw new PackageNotFoundException('That package does not exist');
         }
@@ -55,6 +56,7 @@ class FilePackageRepository implements PackageRepositoryInterface
 
     private function packageExists($requestedPackage)
     {
+
         foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 
@@ -85,12 +87,22 @@ class FilePackageRepository implements PackageRepositoryInterface
         foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 
-            if ($fileFound == true) {
-                // If we found the file we need to make sure to stop reading
-                // when data is finished
-                if ($line == "\n\n") {
+            if ($exploded[0] == 'Package') {
+                // File was already found, we are now facing another package
+                if ($fileFound == true) {
                     return $data;
                 }
+
+                $packageName = trim($exploded[1]);
+
+                if ($packageName == $requestedPackage) {
+                    // This is the package we are looking for!
+                    $fileFound = true;
+                    $data['Package'] = $packageName;
+                }
+            }
+
+            if ($fileFound == true) {
 
                 $exploded = explode(': ', $line);
 
@@ -100,16 +112,6 @@ class FilePackageRepository implements PackageRepositoryInterface
                 }
 
                 $data[$exploded[0]] = trim($exploded[1]);
-            }
-
-            if ($exploded[0] == 'Package') {
-                $packageName = trim($exploded[1]);
-
-                if ($packageName == $requestedPackage) {
-                    // This is the package we are looking for!
-                    $fileFound = true;
-                    $data['Package'] = $packageName;
-                }
             }
         }
 
