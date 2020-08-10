@@ -113,7 +113,7 @@ class PackagesTest extends TestCase
     public function show_responds_with_dependency_with_reference_when_package_has_dependency_in_package_file()
     {
         // Arrange
-        $this->useFakeSourceFile('/tests/Support/status-3-with-dependency-with-reference-entry');
+        $this->useFakeSourceFile('/tests/Support/status-3-with-dependency-with-references-entry');
         $packageWithMissingDependency = 'libdrm-radeon1';
 
         // Act
@@ -125,8 +125,8 @@ class PackagesTest extends TestCase
             'name' => 'libdrm-radeon1',
             'description' => 'Userspace interface to radeon-specific kernel DRM services -- runtime',
             'dependencies' => [
-                'libc6 (>= 2.14) reference: ' . Url::to('packages/show/') . 'libc6',
-                'libdrm2 (>= 2.4.3) reference: ' . Url::to('packages/show/') . 'libdrm2',
+                'libc6 (>= 2.14) reference: ' . \Url::to('packages/show/libc6'),
+                'libdrm2 (>= 2.4.3) reference: ' . \Url::to('packages/show/libdrm2'),
             ]
         ]);
     }

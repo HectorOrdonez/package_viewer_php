@@ -31,6 +31,7 @@ if (!function_exists('dump')) {
     }
 }
 
+$app->withFacades();
 $app->register(\AgriPlace\Package\PackageServiceProvider::class);
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
     require __DIR__ . '/../app/Http/routes.php';
