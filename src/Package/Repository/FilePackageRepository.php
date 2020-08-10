@@ -8,7 +8,10 @@ use AgriPlace\Package\PackageRepositoryInterface;
 
 class FilePackageRepository implements PackageRepositoryInterface
 {
-    private $sourceFile;
+    /**
+     * @var array
+     */
+    private $sourceData;
 
     /**
      * Source file path is expected to be relative to the base path of the application
@@ -18,7 +21,11 @@ class FilePackageRepository implements PackageRepositoryInterface
      */
     public function __construct($sourceFilePath)
     {
-        $this->sourceFile = file(base_path() . $sourceFilePath);
+        $file = file(base_path() . $sourceFilePath);
+
+        foreach ($file as $line) {
+            $this->sourceData[] = explode(': ', $line);
+        }
     }
 
     /**
@@ -28,11 +35,9 @@ class FilePackageRepository implements PackageRepositoryInterface
     {
         $data = [];
 
-        foreach ($this->sourceFile as $line) {
-            $exploded = explode(': ', $line);
-
-            if ($exploded[0] == 'Package') {
-                $data[] = trim($exploded[1]);
+        foreach ($this->sourceData as $record) {
+            if ($record[0] == 'Package') {
+                $data[] = trim($record[1]);
             }
         }
 
@@ -60,12 +65,9 @@ class FilePackageRepository implements PackageRepositoryInterface
 
     private function packageExists($requestedPackage): bool
     {
-
-        foreach ($this->sourceFile as $line) {
-            $exploded = explode(': ', $line);
-
-            if ($exploded[0] == 'Package') {
-                $packageName = trim($exploded[1]);
+        foreach ($this->sourceData as $record) {
+            if ($record[0] == 'Package') {
+                $packageName = trim($record[1]);
 
                 if ($packageName == $requestedPackage) {
                     return true;
@@ -88,16 +90,14 @@ class FilePackageRepository implements PackageRepositoryInterface
         $data = ['Depends' => []];
 
         // First we need to find dwhere the package info starts
-        foreach ($this->sourceFile as $line) {
-            $exploded = explode(': ', $line);
-
-            if ($exploded[0] == 'Package') {
+        foreach ($this->sourceData as $record) {
+            if ($record[0] == 'Package') {
                 // File was already found, we are now facing another package
                 if ($fileFound == true) {
                     return $data;
                 }
 
-                $packageName = trim($exploded[1]);
+                $packageName = trim($record[1]);
 
                 if ($packageName == $requestedPackage) {
                     // This is the package we are looking for!
@@ -107,15 +107,13 @@ class FilePackageRepository implements PackageRepositoryInterface
             }
 
             if ($fileFound == true) {
-                $exploded = explode(': ', $line);
-
                 // We do not need information related to multiple lines
-                if (count($exploded) == 1) {
+                if (count($record) == 1) {
                     continue;
                 }
 
-                if ($exploded[0] == 'Depends') {
-                    $rawDependencies = explode(', ', trim($exploded[1]));
+                if ($record[0] == 'Depends') {
+                    $rawDependencies = explode(', ', trim($record[1]));
                     $dependencies = [];
 
                     foreach ($rawDependencies as $dependency) {
@@ -134,9 +132,9 @@ class FilePackageRepository implements PackageRepositoryInterface
                         }
                     }
 
-                    $data[$exploded[0]] = $dependencies;
+                    $data[$record[0]] = $dependencies;
                 } else {
-                    $data[$exploded[0]] = trim($exploded[1]);
+                    $data[$record[0]] = trim($record[1]);
                 }
             }
         }
