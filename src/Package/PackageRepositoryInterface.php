@@ -19,5 +19,5 @@ interface PackageRepositoryInterface
      * @return Package
      * @throws PackageNotFoundException
      */
-    public function findOneByName($name): Package;
+    public function findOneByName(string $name): Package;
 }

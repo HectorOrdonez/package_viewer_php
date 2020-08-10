@@ -1,6 +1,8 @@
 <?php
 
+use AgriPlace\Package\Factory\PackageFactory;
 use AgriPlace\Package\PackageRepositoryInterface;
+use AgriPlace\Package\Parser\PackageParser;
 use AgriPlace\Package\Repository\FilePackageRepository;
 
 class PackagesTest extends TestCase
@@ -15,7 +17,11 @@ class PackagesTest extends TestCase
     private function useFakeSourceFile($fakeSourceFile): void
     {
         $this->app->bind(PackageRepositoryInterface::class, function () use ($fakeSourceFile) {
-            return new FilePackageRepository(new AgriPlace\Package\Parser\PackageParser(), $fakeSourceFile);
+            return new FilePackageRepository(
+                new PackageParser(),
+                new PackageFactory(),
+                $fakeSourceFile
+            );
         });
     }
 
