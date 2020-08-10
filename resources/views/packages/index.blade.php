@@ -32,7 +32,7 @@
         <h4>Packages</h4>
         <ul>
             @forelse($packageNames as $packageName)
-                <li><a href="{{ url('packages/show/' . $packageName) }}">{{ $packageName }}</a></li>
+                <li><a href="{{ url('packages/' . $packageName) }}">{{ $packageName }}</a></li>
             @empty
                 <li>No packages!</li>
             @endforelse

@@ -103,8 +103,14 @@ class PackagesTest extends TestCase
             'name' => 'libdrm-radeon1',
             'description' => 'Userspace interface to radeon-specific kernel DRM services -- runtime',
             'dependencies' => [
-                'libc6 (>= 2.14)',
-                'libdrm2 (>= 2.4.3)',
+                [
+                    'name' => 'libc6',
+                    'reference' => null
+                ],
+                [
+                    'name' => 'libdrm2',
+                    'reference' => null
+                ],
             ]
         ]);
     }
@@ -125,8 +131,14 @@ class PackagesTest extends TestCase
             'name' => 'libdrm-radeon1',
             'description' => 'Userspace interface to radeon-specific kernel DRM services -- runtime',
             'dependencies' => [
-                'libc6 (>= 2.14) reference: ' . \Url::to('packages/show/libc6'),
-                'libdrm2 (>= 2.4.3) reference: ' . \Url::to('packages/show/libdrm2'),
+                [
+                    'name' => 'libc6',
+                    'reference' => \Url::to('packages/show/libc6'),
+                ],
+                [
+                    'name' => 'libdrm2',
+                    'reference' => \Url::to('packages/show/libdrm2'),
+                ],
             ]
         ]);
     }

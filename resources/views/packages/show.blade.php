@@ -64,8 +64,14 @@
                         <tbody>
                         @foreach($package['dependencies'] as $dependency)
                             <tr>
-                                <td>{{ $dependency }}</td>
-                                <td><a href="bla">link</a></td>
+                                <td>{{ $dependency['name'] }}</td>
+                                <td>
+                                    @if(is_null($dependency['reference']))
+                                        Missing package
+                                    @else
+                                        <a href="{{ url('packages/' . $dependency['name']) }}">Link</a>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

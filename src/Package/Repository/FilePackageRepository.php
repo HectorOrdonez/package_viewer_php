@@ -115,15 +115,22 @@ class FilePackageRepository implements PackageRepositoryInterface
                 }
 
                 if ($exploded[0] == 'Depends') {
-                    $dependencies = explode(', ', trim($exploded[1]));
+                    $rawDependencies = explode(', ', trim($exploded[1]));
+                    $dependencies = [];
 
-                    foreach($dependencies as &$dependency)
-                    {
+                    foreach ($rawDependencies as $dependency) {
                         list($dependencyName) = explode(' ', $dependency);
 
-                        if($this->packageExists($dependencyName))
-                        {
-                            $dependency .= ' reference: ' . \Url::to('packages/show/' . $dependencyName);
+                        if ($this->packageExists($dependencyName)) {
+                            $dependencies[] = [
+                                'name' => $dependencyName,
+                                'reference' => \Url::to('packages/show/' . $dependencyName),
+                            ];
+                        } else {
+                            $dependencies[] = [
+                                'name' => $dependencyName,
+                                'reference' => null,
+                            ];
                         }
                     }
 
