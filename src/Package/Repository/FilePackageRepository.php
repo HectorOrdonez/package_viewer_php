@@ -51,7 +51,11 @@ class FilePackageRepository implements PackageRepositoryInterface
 
         $packageDetails = $this->getPackageDetails($name);
 
-        return new Package($packageDetails['Package'], $packageDetails['Description']);
+        return new Package(
+            $packageDetails['Package'],
+            $packageDetails['Description'],
+            $packageDetails['Depends']
+        );
     }
 
     private function packageExists($requestedPackage): bool
@@ -103,7 +107,6 @@ class FilePackageRepository implements PackageRepositoryInterface
             }
 
             if ($fileFound == true) {
-
                 $exploded = explode(': ', $line);
 
                 // We do not need information related to multiple lines
@@ -111,7 +114,11 @@ class FilePackageRepository implements PackageRepositoryInterface
                     continue;
                 }
 
-                $data[$exploded[0]] = trim($exploded[1]);
+                if ($exploded[0] == 'Depends') {
+                    $data[$exploded[0]] = explode(', ', trim($exploded[1]));
+                } else {
+                    $data[$exploded[0]] = trim($exploded[1]);
+                }
             }
         }
 

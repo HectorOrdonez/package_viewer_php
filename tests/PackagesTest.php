@@ -75,14 +75,38 @@ class PackagesTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function show_responds_with_dependency_without_reference_when_package_has_dependency_not_in_package_file()
+    /** @todo */
+    public function show_responds_with_package_contents_when_description_is_multiline()
     {
         // Arrange
+
+        // @todo Implement me
 
         // Act
 
         // Assert
+    }
+
+    /** @test */
+    public function show_responds_with_dependency_without_reference_when_package_has_dependency_not_in_package_file()
+    {
+        // Arrange
+        $this->useFakeSourceFile('/tests/Support/status-all-entries');
+        $packageWithMissingDependency = 'libdrm-radeon1';
+
+        // Act
+        $response = $this->get('api/packages/show/' . $packageWithMissingDependency);
+
+        // Assert
+        $response->assertResponseStatus(200);
+        $response->shouldReturnJson([
+            'name' => 'libdrm-radeon1',
+            'description' => 'Userspace interface to radeon-specific kernel DRM services -- runtime',
+            'dependencies' => [
+                'libc6 (>= 2.14)',
+                'libdrm2 (>= 2.4.3)',
+            ]
+        ]);
 
     }
 
