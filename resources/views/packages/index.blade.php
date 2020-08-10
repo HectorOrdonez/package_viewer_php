@@ -31,8 +31,11 @@
     <div class="container">
         <h4>Packages</h4>
         <ul>
-            <li>Some package name here</li>
-            <li>And another here</li>
+            @forelse($packageNames as $packageName)
+                <li><a href="{{ url('packages/show/' . $packageName) }}">{{ $packageName }}</a></li>
+            @empty
+                <li>No packages!</li>
+            @endforelse
         </ul>
     </div>
 </div>

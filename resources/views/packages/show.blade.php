@@ -33,41 +33,47 @@
     </header>
 
     <div class="container">
-        <h1>Package: bla bla</h1>
+        <h1>Package: {{ $package['name'] }}</h1>
         <div class="description panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Description</h3>
             </div>
             <div class="panel-body">
-                Lorem bla bla
+                {{ $package['description'] }}
             </div>
         </div>
 
-        <div class="dependencies panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title ">Dependencies</h3>
+        @if(count($package['dependencies']) == 0)
+            <div class="alert alert-info" role="alert">
+                This package has no dependencies
             </div>
-            <div class="panel-body">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Reference</th>
-                    </tr>
-                    </thead>
+        @else
+            <div class="dependencies panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title ">Dependencies</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Reference</th>
+                        </tr>
+                        </thead>
 
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Some package</td>
-                        <td><a href="bla">link</a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <tbody>
+                        @foreach($package['dependencies'] as $dependency)
+                            <tr>
+                                <td>{{ $dependency }}</td>
+                                <td><a href="bla">link</a></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
 
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 </body>
