@@ -85,9 +85,9 @@ class FilePackageRepository implements PackageRepositoryInterface
     private function getPackageDetails($requestedPackage): array
     {
         $fileFound = false;
-        $data = [];
+        $data = ['Depends' => []];
 
-        // First we need to find where the package info starts
+        // First we need to find dwhere the package info starts
         foreach ($this->sourceFile as $line) {
             $exploded = explode(': ', $line);
 

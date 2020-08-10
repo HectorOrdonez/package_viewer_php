@@ -5,8 +5,6 @@ use AgriPlace\Package\Repository\FilePackageRepository;
 
 class PackagesTest extends TestCase
 {
-    private $sourceFile;
-
     public function setUp()
     {
         parent::setUp();
@@ -26,6 +24,8 @@ class PackagesTest extends TestCase
      */
     public function index_responds_with_200()
     {
+        $this->useFakeSourceFile('/tests/Support/status-all-entries');
+
         // Act
         $response = $this->get('api/packages');
 
@@ -91,7 +91,7 @@ class PackagesTest extends TestCase
     public function show_responds_with_dependency_without_reference_when_package_has_dependency_not_in_package_file()
     {
         // Arrange
-        $this->useFakeSourceFile('/tests/Support/status-all-entries');
+        $this->useFakeSourceFile('/tests/Support/status-1-with-dependency-without-reference-entry');
         $packageWithMissingDependency = 'libdrm-radeon1';
 
         // Act
@@ -107,7 +107,27 @@ class PackagesTest extends TestCase
                 'libdrm2 (>= 2.4.3)',
             ]
         ]);
-
     }
 
+    /** @test */
+    public function show_responds_with_dependency_with_reference_when_package_has_dependency_in_package_file()
+    {
+        // Arrange
+        $this->useFakeSourceFile('/tests/Support/status-3-with-dependency-with-reference-entry');
+        $packageWithMissingDependency = 'libdrm-radeon1';
+
+        // Act
+        $response = $this->get('api/packages/show/' . $packageWithMissingDependency);
+
+        // Assert
+        $response->assertResponseStatus(200);
+        $response->shouldReturnJson([
+            'name' => 'libdrm-radeon1',
+            'description' => 'Userspace interface to radeon-specific kernel DRM services -- runtime',
+            'dependencies' => [
+                'libc6 (>= 2.14) reference: ' . Url::to('packages/show/') . 'libc6',
+                'libdrm2 (>= 2.4.3) reference: ' . Url::to('packages/show/') . 'libdrm2',
+            ]
+        ]);
+    }
 }
