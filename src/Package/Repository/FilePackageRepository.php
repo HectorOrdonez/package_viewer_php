@@ -24,7 +24,7 @@ class FilePackageRepository implements PackageRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function findAllNames()
+    public function findAllNames(): array
     {
         $data = [];
 
@@ -42,7 +42,7 @@ class FilePackageRepository implements PackageRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function findOneByName($name)
+    public function findOneByName($name): Package
     {
 
         if ($this->packageExists($name) == false) {
@@ -54,7 +54,7 @@ class FilePackageRepository implements PackageRepositoryInterface
         return new Package($packageDetails['Package'], $packageDetails['Description']);
     }
 
-    private function packageExists($requestedPackage)
+    private function packageExists($requestedPackage): bool
     {
 
         foreach ($this->sourceFile as $line) {
@@ -78,7 +78,7 @@ class FilePackageRepository implements PackageRepositoryInterface
      * @param string $requestedPackage
      * @return array
      */
-    private function getPackageDetails($requestedPackage)
+    private function getPackageDetails($requestedPackage): array
     {
         $fileFound = false;
         $data = [];

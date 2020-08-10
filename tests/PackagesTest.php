@@ -2,7 +2,6 @@
 
 use AgriPlace\Package\PackageRepositoryInterface;
 use AgriPlace\Package\Repository\FilePackageRepository;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class PackagesTest extends TestCase
 {
@@ -15,7 +14,7 @@ class PackagesTest extends TestCase
         $this->useFakeSourceFile('/tests/Support/status-1-entry');
     }
 
-    private function useFakeSourceFile($fakeSourceFile)
+    private function useFakeSourceFile($fakeSourceFile): void
     {
         $this->app->bind(PackageRepositoryInterface::class, function () use ($fakeSourceFile) {
             return new FilePackageRepository($fakeSourceFile);

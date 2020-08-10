@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use AgriPlace\Package\Exception\PackageNotFoundException;
 use AgriPlace\Package\PackageRepositoryInterface;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpFoundation\Response;
 
 class PackageController extends Controller
 {
-    public function index(PackageRepositoryInterface $packageRepository)
+    public function index(PackageRepositoryInterface $packageRepository): Response
     {
         $names = $packageRepository->findAllNames();
 
         return response()->json($names);
     }
 
-    public function show(PackageRepositoryInterface $packageRepository, $package)
+    public function show(PackageRepositoryInterface $packageRepository, $package): Response
     {
         try {
             $package = $packageRepository->findOneByName($package);

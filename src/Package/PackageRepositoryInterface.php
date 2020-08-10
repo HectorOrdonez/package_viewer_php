@@ -11,7 +11,7 @@ interface PackageRepositoryInterface
      * Returns the names of all the packages installed
      * @return array
      */
-    public function findAllNames();
+    public function findAllNames(): array;
 
     /**
      * Returns a package by its name
@@ -19,5 +19,5 @@ interface PackageRepositoryInterface
      * @return Package
      * @throws PackageNotFoundException
      */
-    public function findOneByName($name);
+    public function findOneByName($name): Package;
 }
