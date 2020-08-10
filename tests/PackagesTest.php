@@ -1,6 +1,5 @@
 <?php
 
-use AgriPlace\Package\Factory\PackageFactory;
 use AgriPlace\Package\PackageRepositoryInterface;
 use AgriPlace\Package\Parser\PackageParser;
 use AgriPlace\Package\Repository\FilePackageRepository;
@@ -80,16 +79,24 @@ class PackagesTest extends TestCase
         ]);
     }
 
-    /** @todo */
+    /** @test */
     public function show_responds_with_package_contents_when_description_is_multiline()
     {
-        // Arrange
-
-        // @todo Implement me
+        $packageThatExists = 'debconf';
 
         // Act
+        $response = $this->get('api/packages/' . $packageThatExists);
 
         // Assert
+        $response->assertResponseStatus(200);
+        $response->shouldReturnJson([
+            'name' => 'debconf',
+            'description' => [
+                'Debian configuration management system',
+                'Debconf is a configuration management system for debian packages. Packages',
+                'use Debconf to ask questions when they are installed.',
+            ]
+        ]);
     }
 
     /** @test */

@@ -11,6 +11,12 @@ namespace AgriPlace\Package\Parser;
 class PackageParser
 {
     /**
+     * This is a helper to go through multi-line entries such as description
+     * @var string
+     */
+    private $currentEntry;
+
+    /**
      * Extracts package related information from the given source
      * It assumes the package exists in it
      *
@@ -23,7 +29,7 @@ class PackageParser
         $packageFound = false;
         $data = [
             'name' => $packageName,
-            'dependencies' => []
+            'dependencies' => [],
         ];
 
         // First we need to find where the package info starts
@@ -46,23 +52,25 @@ class PackageParser
             }
         }
 
-        // End of package data
         return $data;
     }
 
     private function addData(array &$data, $record): void
     {
-        // We do not need information related to multiple lines
-        if (count($record) == 1) {
-            return;
+        // If current record contains more than one cell it is a new entry
+        if (count($record) > 1) {
+            $this->currentEntry = $record[0];
+            $currentData = trim($record[1]);
+        } else {
+            $currentData = trim($record[0]);
         }
 
-        switch ($record[0]) {
+        switch ($this->currentEntry) {
             case 'Depends':
-                $data['dependencies'] = $this->parseDependencies($record);
+                $data['dependencies'] = $this->parseDependencies($currentData);
                 break;
             case 'Description':
-                $data['description'] = trim($record[1]);
+                $data['description'][] = $currentData;
                 break;
             default:
                 // We do not need this data
@@ -71,12 +79,12 @@ class PackageParser
     }
 
     /**
-     * @param $record
+     * @param string $rawData
      * @return array
      */
-    private function parseDependencies($record): array
+    private function parseDependencies(string $rawData): array
     {
-        $rawDependencies = explode(', ', trim($record[1]));
+        $rawDependencies = explode(', ', $rawData);
         $dependencies = [];
 
         foreach ($rawDependencies as $dependency) {

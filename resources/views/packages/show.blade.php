@@ -39,7 +39,9 @@
                 <h3 class="panel-title">Description</h3>
             </div>
             <div class="panel-body">
-                {{ $package['description'] }}
+                @foreach($package['description'] as $line)
+                    <p>{{$line}}</p>
+                @endforeach
             </div>
         </div>
 
