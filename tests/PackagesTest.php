@@ -15,7 +15,7 @@ class PackagesTest extends TestCase
     private function useFakeSourceFile($fakeSourceFile): void
     {
         $this->app->bind(PackageRepositoryInterface::class, function () use ($fakeSourceFile) {
-            return new FilePackageRepository($fakeSourceFile);
+            return new FilePackageRepository(new AgriPlace\Package\Parser\PackageParser(), $fakeSourceFile);
         });
     }
 

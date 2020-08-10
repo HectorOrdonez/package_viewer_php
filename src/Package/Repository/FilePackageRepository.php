@@ -5,6 +5,7 @@ namespace AgriPlace\Package\Repository;
 use AgriPlace\Package\Entity\Package;
 use AgriPlace\Package\Exception\PackageNotFoundException;
 use AgriPlace\Package\PackageRepositoryInterface;
+use AgriPlace\Package\Parser\PackageParser;
 
 class FilePackageRepository implements PackageRepositoryInterface
 {
@@ -12,20 +13,26 @@ class FilePackageRepository implements PackageRepositoryInterface
      * @var array
      */
     private $sourceData;
+    /**
+     * @var PackageParser
+     */
+    private $parser;
 
     /**
      * Source file path is expected to be relative to the base path of the application
      * For instance: /tests/Support/status-1-entry
      *
+     * @param PackageParser $parser
      * @param string $sourceFilePath
      */
-    public function __construct($sourceFilePath)
+    public function __construct(PackageParser $parser, $sourceFilePath)
     {
         $file = file(base_path() . $sourceFilePath);
 
         foreach ($file as $line) {
             $this->sourceData[] = explode(': ', $line);
         }
+        $this->parser = $parser;
     }
 
     /**
@@ -49,7 +56,6 @@ class FilePackageRepository implements PackageRepositoryInterface
      */
     public function findOneByName($name): Package
     {
-
         if ($this->packageExists($name) == false) {
             throw new PackageNotFoundException('That package does not exist');
         }
@@ -86,60 +92,14 @@ class FilePackageRepository implements PackageRepositoryInterface
      */
     private function getPackageDetails($requestedPackage): array
     {
-        $fileFound = false;
-        $data = ['Depends' => []];
+        $packageDetails = $this->parser->parse($this->sourceData, $requestedPackage);
 
-        // First we need to find dwhere the package info starts
-        foreach ($this->sourceData as $record) {
-            if ($record[0] == 'Package') {
-                // File was already found, we are now facing another package
-                if ($fileFound == true) {
-                    return $data;
-                }
-
-                $packageName = trim($record[1]);
-
-                if ($packageName == $requestedPackage) {
-                    // This is the package we are looking for!
-                    $fileFound = true;
-                    $data['Package'] = $packageName;
-                }
-            }
-
-            if ($fileFound == true) {
-                // We do not need information related to multiple lines
-                if (count($record) == 1) {
-                    continue;
-                }
-
-                if ($record[0] == 'Depends') {
-                    $rawDependencies = explode(', ', trim($record[1]));
-                    $dependencies = [];
-
-                    foreach ($rawDependencies as $dependency) {
-                        list($dependencyName) = explode(' ', $dependency);
-
-                        if ($this->packageExists($dependencyName)) {
-                            $dependencies[] = [
-                                'name' => $dependencyName,
-                                'reference' => \Url::to('packages/show/' . $dependencyName),
-                            ];
-                        } else {
-                            $dependencies[] = [
-                                'name' => $dependencyName,
-                                'reference' => null,
-                            ];
-                        }
-                    }
-
-                    $data[$record[0]] = $dependencies;
-                } else {
-                    $data[$record[0]] = trim($record[1]);
-                }
-            }
+        foreach ($packageDetails['Depends'] as &$dependency) {
+            $dependency['reference'] = $this->packageExists($dependency['name']) ?
+                \Url::to('packages/show/' . $dependency['name']) :
+                null;
         }
 
-        // End of file
-        return $data;
+        return $packageDetails;
     }
 }
