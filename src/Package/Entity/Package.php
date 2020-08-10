@@ -13,11 +13,11 @@ class Package implements Arrayable
     /** @var array  */
     private $dependencies;
 
-    public function __construct(string $name, string $description, array $dependencies)
+    public function __construct(array $details)
     {
-        $this->name = $name;
-        $this->description = $description;
-        $this->dependencies = $dependencies;
+        $this->name = $details['name'];
+        $this->description = $details['description'];
+        $this->dependencies = $details['dependencies'];
     }
 
     public function toArray()

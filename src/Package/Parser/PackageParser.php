@@ -21,7 +21,7 @@ class PackageParser
     public function parse($source, $package): array
     {
         $fileFound = false;
-        $data = ['Depends' => []];
+        $data = ['dependencies' => []];
 
         // First we need to find where the package info starts
         foreach ($source as $record) {
@@ -36,7 +36,7 @@ class PackageParser
                 if ($packageName == $package) {
                     // This is the package we are looking for!
                     $fileFound = true;
-                    $data['Package'] = $packageName;
+                    $data['name'] = $packageName;
                 }
             }
 
@@ -58,9 +58,9 @@ class PackageParser
                         ];
                     }
 
-                    $data[$record[0]] = $dependencies;
-                } else {
-                    $data[$record[0]] = trim($record[1]);
+                    $data['dependencies'] = $dependencies;
+                } else if ($record[0] == 'Description') {
+                    $data['description'] = trim($record[1]);
                 }
             }
         }

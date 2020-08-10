@@ -4,7 +4,6 @@ namespace AgriPlace\Package\Repository;
 
 use AgriPlace\Package\Entity\Package;
 use AgriPlace\Package\Exception\PackageNotFoundException;
-use AgriPlace\Package\Factory\PackageFactory;
 use AgriPlace\Package\PackageRepositoryInterface;
 use AgriPlace\Package\Parser\PackageParser;
 
@@ -18,20 +17,15 @@ class FilePackageRepository implements PackageRepositoryInterface
      * @var PackageParser
      */
     private $parser;
-    /**
-     * @var PackageFactory
-     */
-    private $factory;
 
     /**
      * Source file path is expected to be relative to the base path of the application
      * For instance: /tests/Support/status-1-entry
      *
      * @param PackageParser $parser
-     * @param PackageFactory $factory
      * @param string $sourceFilePath
      */
-    public function __construct(PackageParser $parser, PackageFactory $factory, $sourceFilePath)
+    public function __construct(PackageParser $parser, $sourceFilePath)
     {
         $file = file(base_path() . $sourceFilePath);
 
@@ -39,7 +33,6 @@ class FilePackageRepository implements PackageRepositoryInterface
             $this->sourceData[] = explode(': ', $line);
         }
         $this->parser = $parser;
-        $this->factory = $factory;
     }
 
     /**
@@ -67,9 +60,9 @@ class FilePackageRepository implements PackageRepositoryInterface
             throw new PackageNotFoundException('That package does not exist');
         }
 
-        $packageDetails = $this->getPackageDetails($name);
+        $details = $this->getPackageDetails($name);
 
-        return $this->factory->make($packageDetails);
+        return new Package($details);
     }
 
     private function packageExists(string $requestedPackage): bool
@@ -97,12 +90,17 @@ class FilePackageRepository implements PackageRepositoryInterface
     {
         $packageDetails = $this->parser->parse($this->sourceData, $requestedPackage);
 
-        foreach ($packageDetails['Depends'] as &$dependency) {
+        return $this->enrichDetails($packageDetails);
+    }
+
+    private function enrichDetails(array $details): array
+    {
+        foreach ($details['dependencies'] as &$dependency) {
             $dependency['reference'] = $this->packageExists($dependency['name']) ?
-                \Url::to('packages/show/' . $dependency['name']) :
+                \Url::to('api/packages/' . $dependency['name']) :
                 null;
         }
 
-        return $packageDetails;
+        return $details;
     }
 }

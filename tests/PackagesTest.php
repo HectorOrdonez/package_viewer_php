@@ -19,7 +19,6 @@ class PackagesTest extends TestCase
         $this->app->bind(PackageRepositoryInterface::class, function () use ($fakeSourceFile) {
             return new FilePackageRepository(
                 new PackageParser(),
-                new PackageFactory(),
                 $fakeSourceFile
             );
         });
@@ -139,11 +138,11 @@ class PackagesTest extends TestCase
             'dependencies' => [
                 [
                     'name' => 'libc6',
-                    'reference' => \Url::to('packages/show/libc6'),
+                    'reference' => \Url::to('api/packages/libc6'),
                 ],
                 [
                     'name' => 'libdrm2',
-                    'reference' => \Url::to('packages/show/libdrm2'),
+                    'reference' => \Url::to('api/packages/libdrm2'),
                 ],
             ]
         ]);
