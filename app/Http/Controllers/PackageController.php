@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use AgriPlace\Package\Exception\PackageNotFoundException;
 use AgriPlace\Package\PackageRepositoryInterface;
-use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\Response;
 
 class PackageController extends Controller

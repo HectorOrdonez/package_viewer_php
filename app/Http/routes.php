@@ -20,5 +20,5 @@ $app->get('/', function () use ($app) {
 
 $app->group(['prefix' => 'api'], function () use ($app) {
     $app->get('packages', PackageController::class . '@index');
-    $app->get('packages/show/{package}', PackageController::class . '@show');
+    $app->get('packages/{package}', PackageController::class . '@show');
 });

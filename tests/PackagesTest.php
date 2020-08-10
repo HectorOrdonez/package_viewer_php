@@ -51,7 +51,7 @@ class PackagesTest extends TestCase
         $packageThatDoesNotExist = 'life-universe-and-everything';
 
         // Act
-        $response = $this->get('api/packages/show/' . $packageThatDoesNotExist);
+        $response = $this->get('api/packages/' . $packageThatDoesNotExist);
 
         // Assert
         $response->assertResponseStatus(400);
@@ -65,7 +65,7 @@ class PackagesTest extends TestCase
         $packageThatExists = 'debconf';
 
         // Act
-        $response = $this->get('api/packages/show/' . $packageThatExists);
+        $response = $this->get('api/packages/' . $packageThatExists);
 
         // Assert
         $response->assertResponseStatus(200);
@@ -95,7 +95,7 @@ class PackagesTest extends TestCase
         $packageWithMissingDependency = 'libdrm-radeon1';
 
         // Act
-        $response = $this->get('api/packages/show/' . $packageWithMissingDependency);
+        $response = $this->get('api/packages/' . $packageWithMissingDependency);
 
         // Assert
         $response->assertResponseStatus(200);
@@ -117,7 +117,7 @@ class PackagesTest extends TestCase
         $packageWithMissingDependency = 'libdrm-radeon1';
 
         // Act
-        $response = $this->get('api/packages/show/' . $packageWithMissingDependency);
+        $response = $this->get('api/packages/' . $packageWithMissingDependency);
 
         // Assert
         $response->assertResponseStatus(200);
