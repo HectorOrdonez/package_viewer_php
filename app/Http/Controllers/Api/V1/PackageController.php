@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use AgriPlace\Package\Exception\PackageNotFoundException;
-use AgriPlace\Package\PackageRepositoryInterface;
+use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use AgriPlace\Package\PackageRepositoryInterface;
+use AgriPlace\Package\Exception\PackageNotFoundException;
 
 class PackageController extends Controller
 {
